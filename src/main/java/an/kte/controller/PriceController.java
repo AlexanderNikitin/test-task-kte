@@ -1,6 +1,6 @@
 package an.kte.controller;
 
-import an.kte.model.Order;
+import an.kte.model.OrderDocument;
 import an.kte.model.ProductIdCount;
 import an.kte.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +14,13 @@ import java.util.List;
 @RestController
 public class PriceController {
     @Autowired
-    private OrderService OrderService;
+    private OrderService orderService;
 
     @PostMapping("/price/client/{clientId}")
-    public Long price(@PathVariable Long clientId, @RequestBody List<ProductIdCount> productCountList) {
-        Order order = OrderService.constructOrder(clientId, productCountList);
-        return order.getPrice();
+    public Long price(
+            @PathVariable Long clientId,
+            @RequestBody List<ProductIdCount> productCountList) {
+        OrderDocument orderDocument = orderService.constructOrder(clientId, productCountList);
+        return orderDocument.getPrice();
     }
 }

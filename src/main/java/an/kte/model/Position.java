@@ -18,7 +18,7 @@ public class Position {
     @Id
     @GeneratedValue
     private Long id;
-    private Long OrderId;
+    private Long orderId;
     private Long productId;
     private Long count;
     private Long sourcePrice;

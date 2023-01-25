@@ -1,6 +1,5 @@
 package an.kte.service;
 
-import an.kte.model.Discount;
 import an.kte.model.Product;
 import an.kte.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ public class ProductService implements CommonService<Product> {
                 .builder()
                 .name("Book")
                 .description("Book is a thing for the wise man.")
-                .price(100000L)
+                .price(1000L)
                 .build();
         Product client2 = Product
                 .builder()

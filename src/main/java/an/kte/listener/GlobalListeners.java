@@ -11,10 +11,10 @@ import java.util.Timer;
 
 @Component
 public class GlobalListeners {
-    private final long DISCOUNT_DELAY = 10000;
+    private final long DISCOUNT_DELAY = 0;
     private final long DISCOUNT_PERIOD = 60000;
 
-    private final long STATISTIC_DELAY = 60000;
+    private final long STATISTIC_DELAY = 0;
     private final long STATISTIC_PERIOD = 60000;
 
     @Autowired

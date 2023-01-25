@@ -17,7 +17,7 @@ import java.util.Date;
 @Entity
 @Table(schema = "public")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Order {
+public class OrderDocument {
     @Id
     @GeneratedValue
     private Long id;
