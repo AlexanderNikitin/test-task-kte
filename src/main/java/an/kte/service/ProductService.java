@@ -1,5 +1,6 @@
 package an.kte.service;
 
+import an.kte.model.Discount;
 import an.kte.model.Product;
 import an.kte.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,10 @@ public class ProductService implements CommonService<Product> {
                 .build();
         productRepository.save(client1);
         productRepository.save(client2);
+    }
+
+    public Product findTopByOrderByIdDesc() {
+        return productRepository.findTopByOrderByIdDesc();
     }
 
     @Override

@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DiscountRepository extends ListCrudRepository<Discount, Long> {
+    Discount findTopByOrderByIdDesc();
 }

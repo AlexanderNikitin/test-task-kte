@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductRepository extends ListCrudRepository<Product, Long> {
+    Product findTopByOrderByIdDesc();
 }
