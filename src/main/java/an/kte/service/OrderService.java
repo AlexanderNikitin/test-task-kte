@@ -40,11 +40,14 @@ public class OrderService implements CommonService<OrderDocument> {
         productCountList.stream()
                 .map(idCount -> {
                     long price = calculatePositionPrice(idCount.getProductId(), idCount.getCount());
+                    long sourcePrice = getProductPrice(idCount.getProductId());
                     return Position.builder()
                             .orderId(savedOrderDocument.getId())
                             .count(idCount.getCount())
+                            .sourcePrice(sourcePrice)
                             .finalPrice(price)
-                            .finalDiscount(getProductPrice(idCount.getProductId()) - price)
+                            .finalDiscount(sourcePrice - price)
+                            .productId(idCount.getProductId())
                             .build();
                 })
                 .forEach(position -> positionRepository.save(position));
