@@ -2,6 +2,7 @@ package an.kte.service;
 
 import an.kte.model.Review;
 import an.kte.model.ReviewValueCount;
+import an.kte.model.UserReview;
 import an.kte.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -9,6 +10,7 @@ import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Scope("singleton")
@@ -48,6 +50,28 @@ public class ReviewService implements CommonService<Review> {
     }
 
     public Long valueByClientProduct(Long clientId, Long productId) {
-        return reviewRepository.getByClientProduct(clientId, productId).orElseThrow().getValue();
+        return reviewRepository.findByClientIdProductId(clientId, productId).orElseThrow().getValue();
+    }
+
+    public Optional<Review> updateReview(UserReview userReview) {
+        Optional<Review> byClientIdProductId = reviewRepository
+                .findByClientIdProductId(userReview.getClientId(), userReview.getProductId());
+        if (byClientIdProductId.isPresent()) {
+            Review review = byClientIdProductId.get();
+            if (userReview.getValue() == null) {
+                reviewRepository.delete(review);
+                return Optional.empty();
+            } else {
+                review.setValue(userReview.getValue());
+                return Optional.of(reviewRepository.save(review));
+            }
+        } else {
+            Review review = Review.builder()
+                    .value(userReview.getValue())
+                    .clientId(userReview.getClientId())
+                    .productId(userReview.getProductId())
+                    .build();
+            return Optional.of(reviewRepository.save(review));
+        }
     }
 }

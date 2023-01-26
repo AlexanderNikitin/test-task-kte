@@ -17,6 +17,6 @@ public interface ReviewRepository extends ListCrudRepository<Review, Long> {
     @Query(value = "SELECT avg(r.value) as avg FROM review r where r.product_id = ?1", nativeQuery = true)
     Double getAvg(Long productId);
 
-    @Query(value = "SELECT * FROM review WHERE client_id = ?1 AND product_id = ?2", nativeQuery = true)
-    Optional<Review> getByClientProduct(Long clientId, Long productId);
+    @Query(value = "SELECT * FROM review r WHERE r.client_id = ?1 AND r.product_id = ?2", nativeQuery = true)
+    Optional<Review> findByClientIdProductId(Long clientId, Long productId);
 }
