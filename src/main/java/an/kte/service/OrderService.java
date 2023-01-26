@@ -26,6 +26,8 @@ public class OrderService implements CommonService<OrderDocument> {
     private OrderRepository orderRepository;
     @Autowired
     private PositionRepository positionRepository;
+    @Autowired
+    private DiscountService discountService;
 
     public OrderDocument constructOrder(Long clientId, List<ProductIdCount> productCountList) {
         Optional<OrderDocument> lastOrder = orderRepository.findTopByOrderByIdDesc();
@@ -49,7 +51,10 @@ public class OrderService implements CommonService<OrderDocument> {
         final OrderDocument savedOrderDocument = save(orderDocument);
         productCountList.stream()
                 .map(idCount -> {
-                    long price = calculatePositionPrice(idCount.getProductId(), idCount.getCount());
+                    long price = discountService.getPositionPrice(
+                            clientId,
+                            idCount.getProductId(),
+                            idCount.getCount());
                     long sourcePrice = getProductPrice(idCount.getProductId());
                     return Position.builder()
                             .orderId(savedOrderDocument.getId())
@@ -66,13 +71,12 @@ public class OrderService implements CommonService<OrderDocument> {
 
     private long calculateOrderPrice(Long clientId, List<ProductIdCount> productCountList) {
         return productCountList.stream()
-                .map(idCount -> calculatePositionPrice(idCount.getProductId(), idCount.getCount()))
-                .reduce(Long::sum).orElse(0L);
-    }
-
-    private long calculatePositionPrice(Long productId, Long count) {
-        Optional<Product> product = productRepository.findById(productId);
-        return product.map(value -> value.getPrice() * count).orElse(0L);
+                .map(idCount -> discountService.getPositionPrice(
+                        clientId,
+                        idCount.getProductId(),
+                        idCount.getCount()))
+                .reduce(Long::sum)
+                .orElse(0L);
     }
 
     private long getProductPrice(Long productId) {

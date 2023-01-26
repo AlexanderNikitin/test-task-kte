@@ -5,6 +5,7 @@ import an.kte.model.ProductStatistic;
 import an.kte.repository.ClientStatisticRepository;
 import an.kte.repository.ProductStatisticRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Service
+@Scope("singleton")
 public class StatisticService {
     @Autowired
     private DataSource dataSource;
