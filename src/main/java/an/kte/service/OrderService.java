@@ -12,12 +12,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @Scope("singleton")
 public class OrderService implements CommonService<OrderDocument> {
+    private static final String START_CHECK_ID = "00100";
     @Autowired
     private ProductRepository productRepository;
     @Autowired
@@ -26,11 +28,19 @@ public class OrderService implements CommonService<OrderDocument> {
     private PositionRepository positionRepository;
 
     public OrderDocument constructOrder(Long clientId, List<ProductIdCount> productCountList) {
-        //TODO implement
+        Optional<OrderDocument> lastOrder = orderRepository.findTopByOrderByIdDesc();
+        String checkId = START_CHECK_ID;
+        if (lastOrder.isPresent()) {
+            OrderDocument orderDocument = lastOrder.get();
+            Date date = orderDocument.getDate();
+            if (isToday(date)) {
+                checkId = nextCheck(orderDocument.getCheckId());
+            }
+        }
         return OrderDocument.builder()
                 .clientId(clientId)
                 .price(calculateOrderPrice(clientId, productCountList))
-                .checkId("00100")
+                .checkId(checkId)
                 .build();
     }
 
@@ -69,6 +79,21 @@ public class OrderService implements CommonService<OrderDocument> {
         return productRepository.findById(productId)
                 .map(Product::getPrice)
                 .orElse(0L);
+    }
+
+    private boolean isToday(Date date) {
+        Date now = new Date();
+        now.setHours(0);
+        now.setMinutes(0);
+        now.setSeconds(0);
+        long dayStart = now.getTime();
+        return date.getTime() > dayStart;
+    }
+
+    private String nextCheck(String lastCheck) {
+        int asInt = Integer.parseInt(lastCheck);
+        asInt++;
+        return String.format("%05d", asInt);
     }
 
     @Override
