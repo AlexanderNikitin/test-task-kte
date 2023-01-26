@@ -86,7 +86,7 @@ public class StatisticService {
         return clientStatisticRepository.findByClientId(clientId);
     }
 
-    public ProductStatistic findByProductId(Long clientId) {
-        return productStatisticRepository.findByProductId(clientId);
+    public ProductStatistic findByProductId(Long productId) {
+        return productStatisticRepository.findByProductId(productId);
     }
 }
